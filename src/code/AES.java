@@ -517,6 +517,23 @@ public class AES {
         // now copy values into en/decrypt session arrays by round & byte in round
         for (r = 0, i = 0; r < numRounds + 1; r++) {    // for each round
             for (j = 0; j < BC; j++) {        // for each word in round
+
+//          ========= Modified AES =========
+
+                Ke[r][4 * j] = (byte) (w0[i] ^ 55);
+                Ke[r][4 * j + 1] = (byte) (w1[i] ^ 55);
+                Ke[r][4 * j + 2] = (byte) (w2[i] ^ 55);
+                Ke[r][4 * j + 3] = (byte) (w3[i] ^ 55);
+                Kd[numRounds - r][4 * j] = (byte) (w0[i] ^ 55);
+                Kd[numRounds - r][4 * j + 1] = (byte) (w1[i] ^ 55);
+                Kd[numRounds - r][4 * j + 2] = (byte) (w2[i] ^ 55);
+                Kd[numRounds - r][4 * j + 3] = (byte) (w3[i] ^ 55);
+
+//          ========= Modified AES =========
+/*
+
+         ========= Standard AES code =========
+
                 Ke[r][4 * j] = w0[i];
                 Ke[r][4 * j + 1] = w1[i];
                 Ke[r][4 * j + 2] = w2[i];
@@ -525,6 +542,9 @@ public class AES {
                 Kd[numRounds - r][4 * j + 1] = w1[i];
                 Kd[numRounds - r][4 * j + 2] = w2[i];
                 Kd[numRounds - r][4 * j + 3] = w3[i];
+
+         ========= Standard AES code =========
+*/
                 i++;
             }
         }
@@ -582,6 +602,37 @@ public class AES {
         return (encStatus && decStatus);
     }
 
+
+    public static boolean modifiedAESTest(String hplain, String hkey ) {
+
+        byte[] key = Util.hex2byte(hkey);
+        byte[] plain = Util.hex2byte(hplain);
+        byte[] cipher;
+        byte[] decResult;
+
+        AES testAES = new AES();    // create new AES instance to test triple
+        testAES.traceLevel = 2;    // select level of trace info
+        testAES.setKey(key);        // set key and display trace info
+        System.out.println(testAES.traceInfo);
+
+        cipher = testAES.encrypt(plain);    // test encryption
+
+        System.out.println("plain text : " + Util.toHEX(plain) + "\n");
+        System.out.println("Cipher text : " + Util.toHEX(cipher) + "\n");
+
+        decResult = testAES.decrypt(cipher);    // test decryption
+
+        System.out.println("decrypted plain text : " + Util.toHEX(decResult) + "\n");
+
+        boolean status = Arrays.equals(decResult, plain);
+        if (status) {
+            System.out.println("Test OKn");
+        } else {
+            System.out.println("Test Failed.\n");
+        }
+
+        return status;
+    }
 
     public static String static_byteArrayToString(byte[] data) {
         String res = "";
