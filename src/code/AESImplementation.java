@@ -32,7 +32,7 @@ public class AESImplementation {
 	if (f.exists()) {
 	  new FileInputStream(f).read(bytes);
 	} else {
-	   KeyGenerator kgen = KeyGenerator.getInstance("AES");
+	   KeyGenerator kgen = KeyGenerator.getInstance("ModifiedAES");
 	   kgen.init(256);
 	   key = kgen.generateKey();
 	   bytes = key.getEncoded();
@@ -41,12 +41,12 @@ public class AESImplementation {
 
     System.out.println("======= key |" + bytes + "|");
 
-	spec = new SecretKeySpec(bytes,"AES");
+	spec = new SecretKeySpec(bytes,"ModifiedAES");
 	return spec;
   }
   public static String encrypt(String text) throws Exception {
 	SecretKeySpec spec = getKeySpec();
-	Cipher cipher = Cipher.getInstance("AES");
+	Cipher cipher = Cipher.getInstance("ModifiedAES");
 	cipher.init(Cipher.ENCRYPT_MODE, spec);
 	BASE64Encoder enc = new BASE64Encoder();
     String cipherText = enc.encode(cipher.doFinal(text.getBytes()));
@@ -57,7 +57,7 @@ public class AESImplementation {
 
   public static String decrypt(String text) throws Exception {
 	SecretKeySpec spec = getKeySpec();
-	Cipher cipher = Cipher.getInstance("AES");
+	Cipher cipher = Cipher.getInstance("ModifiedAES");
 	cipher.init(Cipher.DECRYPT_MODE, spec);
 	BASE64Decoder dec = new BASE64Decoder();
 	System.out.println("======= decrypted text |" + new String(cipher.doFinal(dec.decodeBuffer(text))) + "|");

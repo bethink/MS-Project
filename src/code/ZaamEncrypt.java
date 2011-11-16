@@ -29,13 +29,13 @@ public class ZaamEncrypt {
 	if (f.exists()) {
 	  new FileInputStream(f).read(bytes);
 	} else {
-	   KeyGenerator kgen = KeyGenerator.getInstance("AES");
+	   KeyGenerator kgen = KeyGenerator.getInstance("ModifiedAES");
 	   kgen.init(256);
 	   key = kgen.generateKey();
 	   bytes = key.getEncoded();
 	   new FileOutputStream(f).write(bytes);
 	}
-	spec = new SecretKeySpec(bytes,"AES");
+	spec = new SecretKeySpec(bytes,"ModifiedAES");
 
     System.out.println("======= key " + bytes);
 
@@ -43,14 +43,14 @@ public class ZaamEncrypt {
   }
   public static void encrypt(String text) throws Exception {
 	SecretKeySpec spec = getKeySpec();
-	Cipher cipher = Cipher.getInstance("AES");
+	Cipher cipher = Cipher.getInstance("ModifiedAES");
 	cipher.init(Cipher.ENCRYPT_MODE, spec);
 	BASE64Encoder enc = new BASE64Encoder();
 	System.out.println("===== encrypted text:" + enc.encode(cipher.doFinal(text.getBytes())));
   }
   public static void decrypt(String text) throws Exception {
 	SecretKeySpec spec = getKeySpec();
-	Cipher cipher = Cipher.getInstance("AES");
+	Cipher cipher = Cipher.getInstance("ModifiedAES");
 	cipher.init(Cipher.DECRYPT_MODE, spec);
 	BASE64Decoder dec = new BASE64Decoder();
 	System.out.println("======= decrypted text:" + new String(cipher.doFinal(dec.decodeBuffer(text))));

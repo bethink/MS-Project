@@ -1,6 +1,8 @@
 package code;
 
 import sun.awt.image.BufImgSurfaceData;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -38,6 +40,16 @@ public class SecurityModuleReverse {
         this.key3 = key3;
     }
 
+    public void setKey3(String key3) {
+        try {
+            this.key3 = deserialize(key3);
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+
     public String getKey4() {
         return key4;
     }
@@ -70,7 +82,9 @@ public class SecurityModuleReverse {
 
     public List<Integer> deserialize(String key3) throws IOException, ClassNotFoundException {
 
-        byte[] buf = key3.getBytes();
+        BASE64Decoder aa = new BASE64Decoder();
+        byte[] buf = aa.decodeBuffer(key3);
+
         ObjectInputStream in;
         in = new ObjectInputStream(new ByteArrayInputStream(buf));
         List<Integer> key3Ary = (List<Integer>) in.readObject();

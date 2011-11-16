@@ -1,6 +1,7 @@
 package code;
 
 import sun.font.EAttribute;
+import sun.misc.BASE64Encoder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -126,6 +127,15 @@ public class SecurityModule {
         return key3;
     }
 
+    public String getKey3String() {
+        try {
+            return serialize(key3);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public void setKey3(List<Integer> key3) {
         this.key3 = key3;
     }
@@ -161,10 +171,10 @@ public class SecurityModule {
 
     private String generateKey4(String cipherText) {
 
-        p("Cipher text: " + cipherText);
+//        p("Cipher text: " + cipherText);
         String alphabetsIntegers = getOrderedCipher(cipherText);
         this.key4 = computeKey4();
-        p("Key4: " + this.key4);
+//        p("Key4: " + this.key4);
         return this.key4;
     }
 
@@ -188,9 +198,9 @@ public class SecurityModule {
 
         this.orderedCipher = alphebets.concat(integers);
 
-        p("Integers: " + this.integers);
-        p("Alphabets: " + this.alphebets);
-        p("Ordered cipher: " + this.orderedCipher);
+//        p("Integers: " + this.integers);
+//        p("Alphabets: " + this.alphebets);
+//        p("Ordered cipher: " + this.orderedCipher);
 
         return this.orderedCipher;
     }
@@ -216,16 +226,21 @@ public class SecurityModule {
         this.key3.addAll(this.intPositions);
         this.key3.addAll(this.remainingAlpaPositions);
         this.key3.addAll(this.first7AlphaPositions);
-        p( getKey3().toString() );
+//        p( getKey3().toString() );
         return this.key3;
     }
 
     public String serialize(List<Integer> key3) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutput out = new ObjectOutputStream(bos);
+
+        ByteArrayOutputStream opStream = new ByteArrayOutputStream();
+        ObjectOutput out = new ObjectOutputStream(opStream);
         out.writeObject(key3);
         out.close();
-        return bos.toString();
+
+        BASE64Encoder aa = new BASE64Encoder();
+        String serializedObj = aa.encode(opStream.toByteArray());
+
+        return serializedObj;
     }
 
     private String first7Alphabets( ) {
@@ -233,13 +248,13 @@ public class SecurityModule {
         this.first7Alphabets = this.alphebets.substring(0, 7);
         this.first7AlphaPositions = this.alpaPositions.subList(0, 7);
 
-        p("First 7 alphabets: " + this.first7Alphabets);
+//        p("First 7 alphabets: " + this.first7Alphabets);
 
         return this.first7Alphabets;
     }
 
     private static void p(String string){
-        System.out.println(string);
+        System.out.println(string + "\n");
     }
 
 }

@@ -19,7 +19,16 @@ import java.awt.Color;
 
 public class Crypter {	
 	private Picture copy;
-	private Picture key;
+
+    public Picture getKey() {
+        return key;
+    }
+
+    public void setKey(Picture key) {
+        this.key = key;
+    }
+
+    private Picture key;
 	private int bytes;
 	private int countc; //count chars at text, when crypting
 	/**

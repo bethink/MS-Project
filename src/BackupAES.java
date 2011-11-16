@@ -1,29 +1,29 @@
 
 import java.util.*;
 
-/** AES - implementation of the AES block cipher in Java.
- *  <p> Illustrative code for the AES block cipher (Rijndael).
+/** ModifiedAES - implementation of the ModifiedAES block cipher in Java.
+ *  <p> Illustrative code for the ModifiedAES block cipher (Rijndael).
  *  Handles a single block encryption or decryption, with diagnostic
  *  logging of intermediate values if required.
- *  <p> AES is a block cipher with a key length of 16/24/32 bytes
+ *  <p> ModifiedAES is a block cipher with a key length of 16/24/32 bytes
  *  and a block length 16 bytes.
  *  <p>
- *  AES (Rijndael) was designed by Joan Daemen and Vincent Rijmen,
+ *  ModifiedAES (Rijndael) was designed by Joan Daemen and Vincent Rijmen,
  *  and was accepted as the US NIST's Advanced Encryption Standard in 2000.
  *  <p>
  *  This is the <b>slow, obvious code</b> version, written to follow the
  *  algorithm specification as closely and clearly as possible.
  *  It's code was originally derived from the illustrative Rijndael Java
- *  implementation submitted to the AES process, and sourced from the
+ *  implementation submitted to the ModifiedAES process, and sourced from the
  *  <a href="http://www.esat.kuleuven.ac.be/~rijmen/rijndael/rijndael.zip">
  *  Rijndael sample Java code</a>, but has been extensively adapted by Lawrie Brown
  *  to suit the illustrative requirements of the crypto calc applets
  *  he has written for his Cryptography courses at ADFA.
- *  The code has been tested using the AES triples published in FIPS-197 App C.
+ *  The code has been tested using the ModifiedAES triples published in FIPS-197 App C.
  *
  *  @author Joan Daemen, Vincent Rijmen, Lawrie Brown, Feb 2005
  *  @see <a href="http://www.unsw.adfa.edu.au/~lpb/">Lawrie Brown</a>
- *  @see <a href="http://csrc.nist.gov/encryption/aes/">AES home page</a>
+ *  @see <a href="http://csrc.nist.gov/encryption/aes/">ModifiedAES home page</a>
  *  @see <a href="http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf">FIPS-197 Standard</a>
  *  @see <a href="http://www.esat.kuleuven.ac.be/~rijmen/rijndael/">Rijndael Home Page</a>
  *  @see <a href="http://www.esat.kuleuven.ac.be/~rijmen/rijndael/rijndael.zip">Rijndael example Java code</a>
@@ -49,21 +49,21 @@ class AES {
 //     */
 //    public String traceInfo = "";
 //
-//    /** AES constants and variables. */
+//    /** ModifiedAES constants and variables. */
 //    public static final int
-//        ROUNDS = 14,        // AES has 10-14 rounds
-//        BLOCK_SIZE = 16,    // AES uses 128-bit (16 byte) key
-//        KEY_LENGTH = 32;    // AES uses 128/192/256-bit (16/24/32 byte) key
+//        ROUNDS = 14,        // ModifiedAES has 10-14 rounds
+//        BLOCK_SIZE = 16,    // ModifiedAES uses 128-bit (16 byte) key
+//        KEY_LENGTH = 32;    // ModifiedAES uses 128/192/256-bit (16/24/32 byte) key
 //
-//    // Define key attributes for current AES instance
-//    /** number of rounds used given AES key set on this instance. */
+//    // Define key attributes for current ModifiedAES instance
+//    /** number of rounds used given ModifiedAES key set on this instance. */
 //    int numRounds;
-//    /** encryption round keys derived from AES key set on this instance. */
+//    /** encryption round keys derived from ModifiedAES key set on this instance. */
 //    byte[][] Ke;
-//    /** decryption round keys derived from AES key set on this instance. */
+//    /** decryption round keys derived from ModifiedAES key set on this instance. */
 //    byte[][] Kd;
 //
-//    /** AES encryption S-box.
+//    /** ModifiedAES encryption S-box.
 //     *  <p>See FIPS-197 section 5.1.1 or Stallings section 5.2.
 //     *  Note that hex values have been converted to decimal for easy table
 //     *  specification in Java.
@@ -86,7 +86,7 @@ class AES {
 //    -31, -8, -104, 17, 105, -39, -114, -108, -101, 30, -121, -23, -50, 85, 40, -33,
 //    -116, -95, -119, 13, -65, -26, 66, 104, 65, -103, 45, 15, -80, 84, -69, 22 };
 //
-//    /** AES decryption S-box.
+//    /** ModifiedAES decryption S-box.
 //     *  <p>See FIPS-197 section 5.1.1 or Stallings section 5.2.
 //     *  Note that hex values have been converted to decimal for easy table
 //     *  specification in Java.
@@ -109,7 +109,7 @@ class AES {
 //    -96, -32, 59, 77, -82, 42, -11, -80, -56, -21, -69, 60, -125, 83, -103, 97,
 //    23, 43, 4, 126, -70, 119, -42, 38, -31, 105, 20, 99, 85, 33, 12, 125 };
 //
-//    /** AES key schedule round constant table.
+//    /** ModifiedAES key schedule round constant table.
 //     *  <p>See FIPS-197 section 5.1.1 or Stallings section 5.2.
 //     *  Note that hex values have been converted to decimal for easy table
 //     *  specification in Java, and that indexes start at 1, hence initial 0 entry.
@@ -122,10 +122,10 @@ class AES {
 //    99, -58, -105, 53, 106, -44,
 //    -77, 125, -6, -17, -59, -111 };
 //
-//    /** Internal AES constants and variables. */
+//    /** Internal ModifiedAES constants and variables. */
 //    public static final int
-//        COL_SIZE = 4,                // depth of each column in AES state variable
-//        NUM_COLS = BLOCK_SIZE / COL_SIZE,    // number of columns in AES state variable
+//        COL_SIZE = 4,                // depth of each column in ModifiedAES state variable
+//        NUM_COLS = BLOCK_SIZE / COL_SIZE,    // number of columns in ModifiedAES state variable
 //        ROOT = 0x11B;                // generator polynomial used in GF(2^8)
 //
 //    /** define ShiftRows transformation as shift amount for each row in state. */
@@ -151,14 +151,14 @@ class AES {
 //        for (i = 1; i < 255; i++) log[alog[i]] = i;
 //    }
 //
-//    /** Construct AES object. */
-//    public AES() {
+//    /** Construct ModifiedAES object. */
+//    public ModifiedAES() {
 //    }
 //
-//    /** return number of rounds for a given AES key size.
+//    /** return number of rounds for a given ModifiedAES key size.
 //     *
 //     * @param keySize    size of the user key material in bytes.
-//     * @return        number of rounds for a given AES key size.
+//     * @return        number of rounds for a given ModifiedAES key size.
 //     */
 //    public static int getRounds (int keySize) {
 //        switch (keySize) {
@@ -187,7 +187,7 @@ class AES {
 //    /** diagnostic trace of static tables. */
 //    public static void trace_static() {
 //    int i,j;
-//    System.out.print("AES Static Tablesn");
+//    System.out.print("ModifiedAES Static Tablesn");
 //        System.out.print("S[] = n"); for(i=0;i<16;i++) { for(j=0;j<16;j++) System.out.print(Util.toHEX1(S[i*16+j])+", "); System.out.println();}
 //        System.out.print("Si[] = n"); for(i=0;i<16;i++) { for(j=0;j<16;j++) System.out.print(Util.toHEX1(Si[i*16+j])+", "); System.out.println();}
 //    System.out.print("rcon[] = n"); for(i=0;i<5;i++) {for(j=0;j<6;j++) System.out.print(Util.toHEX1(rcon[i*6+j])+", "); System.out.println();}
@@ -197,7 +197,7 @@ class AES {
 //
 //    //......................................................................
 //    /**
-//     * AES encrypt 128-bit plaintext using key previously set.
+//     * ModifiedAES encrypt 128-bit plaintext using key previously set.
 //     *
 //     * <p>Follows cipher specification given in FIPS-197 section 5.1
 //     * See pseudo code in Fig 5, and details in this section.
@@ -207,8 +207,8 @@ class AES {
 //     */
 //    public byte[] encrypt(byte[] plain) {
 //    // define working variables
-//    byte [] a = new byte[BLOCK_SIZE];    // AES state variable
-//    byte [] ta = new byte[BLOCK_SIZE];    // AES temp state variable
+//    byte [] a = new byte[BLOCK_SIZE];    // ModifiedAES state variable
+//    byte [] ta = new byte[BLOCK_SIZE];    // ModifiedAES temp state variable
 //    byte [] Ker;                // encrypt keys for current round
 //    int    i, j, k, row, col;
 //
@@ -291,7 +291,7 @@ class AES {
 //
 //    //......................................................................
 //    /**
-//     * AES decrypt 128-bit ciphertext using key previously set.
+//     * ModifiedAES decrypt 128-bit ciphertext using key previously set.
 //     *
 //     * <p>Follows cipher specification given in FIPS-197 section 5.3
 //     * See pseudo code in Fig 5, and details in this section.
@@ -301,8 +301,8 @@ class AES {
 //     */
 //    public byte[] decrypt(byte[] cipher) {
 //    // define working variables
-//    byte [] a = new byte[BLOCK_SIZE];    // AES state variable
-//    byte [] ta = new byte[BLOCK_SIZE];    // AES temp state variable
+//    byte [] a = new byte[BLOCK_SIZE];    // ModifiedAES state variable
+//    byte [] ta = new byte[BLOCK_SIZE];    // ModifiedAES temp state variable
 //    byte [] Kdr;                // encrypt keys for current round
 //    int    i, j, k, row, col;
 //
@@ -392,7 +392,7 @@ class AES {
 //     * <p>Session keys will be saved in Ke and Kd instance variables,
 //     * along with numRounds being the number of rounds for this sized key.
 //     *
-//     * @param key        The 128/192/256-bit AES key to use.
+//     * @param key        The 128/192/256-bit ModifiedAES key to use.
 //     */
 //    public void setKey(byte[] key) {
 //    // assorted internal constants
@@ -479,7 +479,7 @@ class AES {
 //    }
 //
 //
-//    /** self-test routine for AES cipher
+//    /** self-test routine for ModifiedAES cipher
 //     *  @param hkey    key to test in hex
 //     *  @param hplain    plaintext to test in hex
 //     *  @param hcipher    ciphertext to test in hex
@@ -487,13 +487,13 @@ class AES {
 //     */
 //    public static void self_test (String hkey, String hplain, String hcipher, int lev) {
 //
-//        // AES test triple (128-bit key test value from FIPS-197)
+//        // ModifiedAES test triple (128-bit key test value from FIPS-197)
 //        byte [] key    = Util.hex2byte(hkey);
 //        byte [] plain    = Util.hex2byte(hplain);
 //        byte [] cipher    = Util.hex2byte(hcipher);
 //    byte [] result;
 //
-//    AES testAES = new AES();    // create new AES instance to test triple
+//    ModifiedAES testAES = new ModifiedAES();    // create new ModifiedAES instance to test triple
 //    testAES.traceLevel = lev;    // select level of trace info
 //    testAES.setKey(key);        // set key and display trace info
 //        System.out.print(testAES.traceInfo);
@@ -545,12 +545,12 @@ class AES {
 //        return sb.toString();
 //    }
 //
-//    /** self-test routine for AES cipher
+//    /** self-test routine for ModifiedAES cipher
 //        @param args command line arguments
 //     */
 //
 //    public String _cryptAll(String data, int mode)  {
-//        AES aes = this;
+//        ModifiedAES aes = this;
 //        if(data.length()/16 > ((int) data.length()/16)) {
 //            int rest = data.length()-((int) data.length()/16)*16;
 //            for(int i=0; i<rest; i++)
@@ -565,12 +565,12 @@ class AES {
 //            partByte = static_stringToByteArray(partStr);
 //            if(mode==1)
 //		{
-//		//System.out.println("AES ENCRYPTION");
+//		//System.out.println("ModifiedAES ENCRYPTION");
 //		partByte = aes.encrypt(partByte);
 //		}
 //            if(mode==2)
 //		{
-//		//System.out.println("AES DECRYPTION");
+//		//System.out.println("ModifiedAES DECRYPTION");
 //		partByte = aes.decrypt(partByte);
 //		}
 //            for(int b=0; b<16; b++)
@@ -596,7 +596,7 @@ class AES {
 //    public static void main (String[] args)
 //    {
 //
-//	//System.out.println("WELCoMe To AES Encryption/Decryption::");
+//	//System.out.println("WELCoMe To ModifiedAES Encryption/Decryption::");
 //
 //      System.out.println("");
 //	System.out.println("");
@@ -612,17 +612,17 @@ class AES {
 //      System.out.println("");
 //
 //
-//	System.out.println("The Input Plain Data to AES is :::::::::::::"+data);
+//	System.out.println("The Input Plain Data to ModifiedAES is :::::::::::::"+data);
 //	System.out.println("");
 //
 //	String data1;
 //     String PlainData;
-//	AES aes;
-//	aes = new AES();
+//	ModifiedAES aes;
+//	aes = new ModifiedAES();
 //	aes.setKey(cryptKey);
 //	data = aes.Encrypt(data);
 //
-//	System.out.println("The AES Cipher Data is ::::::::::::::"+data);
+//	System.out.println("The ModifiedAES Cipher Data is ::::::::::::::"+data);
 //
 //     System.out.println("");
 //     System.out.println("--------Module 3-------------");
@@ -630,17 +630,17 @@ class AES {
 //     Crypter c = new Crypter("key.png"); // Key picture.
 //
 //		//Crypt
-//		c.encrypt(data, "secret.png");
-//		System.out.println("The AES Cipher Data is now hidden in the Secret Image.");
+//		c.encrypt(data, "secret-old.png");
+//		System.out.println("The ModifiedAES Cipher Data is now hidden in the Secret Image.");
 //
 //		//Decrypt
-//		System.out.println("The AES Cipher data from the Secret image is:::"+c.deCrypt("secret.png"));
+//		System.out.println("The ModifiedAES Cipher data from the Secret image is:::"+c.deCrypt("secret-old.png"));
 //System.out.println("");
 //	System.out.println("");
-//       data=c.deCrypt("secret.png");
+//       data=c.deCrypt("secret-old.png");
 //
 //
-//System.out.println("The AES Cipher Data is now given to AES for Decrypt......");
+//System.out.println("The ModifiedAES Cipher Data is now given to ModifiedAES for Decrypt......");
 //	data1 = aes.Decrypt(data);
 //	System.out.println("");
 //        System.out.println("The Plain recoverd data Data is ::::::::"+data1);
